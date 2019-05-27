@@ -123,9 +123,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"), ]
 
 # OAauth2 config here
-CLIENT_ID = '<EnterHere>'
-CLIENT_SECRET = '<EnterHere>'
-REDIRECT_URI = 'http://localhost:8000/app/callback'
+CLIENT_ID = 'Q0vQLVLHJw3UCEXxsWcgCZfYcxr3g5vyETu40hXWidnH9J8K41'
+CLIENT_SECRET = '70vrrFklut0JNwLiZXDKRH5tx1xXZumFZ9MqbxHt'
+REDIRECT_URI = 'https://developer.intuit.com/v2/OAuth2Playground/RedirectUrl'
 ENVIRONMENT = 'sandbox'
 
 # QBO Base URLs
@@ -139,4 +139,3 @@ ACCESS_KEY = '<EnterHere>'
 ACCESS_SECRET = '<EnterHere>'
 
 REALM_ID = '<EnterHere>'
-
