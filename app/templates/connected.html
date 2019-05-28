@@ -46,9 +46,9 @@
             }
 
             function exportVendCall() {
-                $("#result").html('Loading...')
+                $("#result").html('<div class="vd-loader"></div>')
                 $.get("/app/post_vend_sales", function (data) {
-                    $("#result").html(data)
+                    $("#result").html(prettyPrintJson.toHtml(JSON.parse(data)))
                 })
             }
         </script>
