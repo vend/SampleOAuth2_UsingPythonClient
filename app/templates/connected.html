@@ -30,6 +30,7 @@
                 }
             }
         </style>
+        <link rel="stylesheet" href="{% static "pretty-print-json.css" %}">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script>
             if (window.opener) {
@@ -40,11 +41,12 @@
             function invoiceCall() {
                 $("#result").html('<div class="vd-loader"></div>')
                 $.get("/app/qbo_invoices", function (data) {
-                    $("#result").html(data)
+                    $("#result").html(prettyPrintJson.toHtml(JSON.parse(data)))
                 })
             }
         </script>
         <script src="//use.typekit.net/xdh7sbp.js" onload="try{Typekit.load();}catch(e){}" async></script>
+        <script src="{% static "pretty-print-json.min.js" %}"></script>
     </head>
 
     <body>
@@ -106,7 +108,7 @@
             </section>
             <section class="bg-light vhq-pt-30 vhq-pb-30">
                 <div class="container">
-                    <code id="result" style="overflow-wrap: break-word"></code>
+                    <pre id="result" style="overflow-wrap: break-word"></pre>
                 </div>
             </section>
             <section style="padding: 30px 0"></section>
