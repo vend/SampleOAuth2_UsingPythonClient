@@ -4,6 +4,32 @@
         <title>Vend Prototype - Intuit</title>
         <link rel="stylesheet" type="text/css" media="screen"
             href="https://d30fzr2520l6g5.cloudfront.net/css/bootstrap4_vhq.4dbff494833d3cd5e748573207e70d19.min.css" />
+        <style>
+            .vd-loader {
+                display: inline-block;
+                align-self: center;
+                width: 40px;
+                height: 40px;
+                border: 2px solid #41AF4B;
+                border-left-color: transparent;
+                border-radius: 50%;
+                animation: vd-rotate 1s ease-in-out infinite;
+                animation-duration: 1s;
+                animation-timing-function: ease-in-out;
+                animation-delay: 0s;
+                animation-iteration-count: infinite;
+                animation-direction: normal;
+                animation-fill-mode: none;
+                animation-play-state: running;
+                animation-name: vd-rotate;
+            }
+
+            @keyframes vd-rotate {
+                100% {
+                   transform: rotate(360deg);
+                }
+            }
+        </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script>
             if (window.opener) {
@@ -12,7 +38,7 @@
             }
 
             function invoiceCall() {
-                $("#result").html('Loading...')
+                $("#result").html('<div class="vd-loader"></div>')
                 $.get("/app/qbo_invoices", function (data) {
                     $("#result").html(data)
                 })
@@ -61,20 +87,29 @@
             </div>
         </header>
         
-        <div id="main"></div>
-        <section style="padding: 60px 0">
-            <div class="container">
-                <h4>Profit</h4>
-                <p>Step 2: Make API calls between Vend and QBO...</p>
-            </div>
-        </section>
-        <section class="bg-light vhq-pt-30 vhq-pb-30">
-            <div class="container">
-                <h4>Try out the integration</h4>
-                <button onclick="invoiceCall()">Invoices API Call</button>
-                <div><code id="result"></code></div>
-            </div>
-        </section>
+        <div id="main">
+            <section style="padding: 60px 0">
+                <div class="container">
+                    <h4>Profit</h4>
+                    <p>Step 2: Make API calls between Vend and QBO...</p>
+                </div>
+            </section>
+            <section class="bg-light vhq-pt-30 vhq-pb-30">
+                <div class="container">
+                    <h4>Try out the integration</h4>
+                    <div class="row vhq-pl-0 no-gutters">
+                        <div class="col-12 col-md-3">
+                            <button onclick="invoiceCall()"class="btn btn-primary btn-block">Invoices API Call</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="bg-light vhq-pt-30 vhq-pb-30">
+                <div class="container">
+                    <code id="result" style="overflow-wrap: break-word"></code>
+                </div>
+            </section>
+            <section style="padding: 30px 0"></section>
         </div>
         
         <div class="vhq-footer">
@@ -296,19 +331,5 @@
                 </div>
             </div>
         </div>
-
-
-
-
-<!--
-       <a href="/app/">Home</a>
-        <h3>Connected!</h3>
-        <p>Would you like to make a sample API call?</p>
-        <div>
-            <button onclick="invoiceCall()">Invoices API Call</button>
-            <div><code id="result"></code></div>
-        </div>
- 
--->
     </body>
 </html>
