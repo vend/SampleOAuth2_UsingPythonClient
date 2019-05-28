@@ -1,10 +1,6 @@
 {% extends "layout.html" %}
 {% load static %}
 {% block scripts %}
-if (window.opener) {
-window.opener.location.href ='/app/connected'; 
-window.close();
-}
 function invoiceCall() {
 $("#result").html('<div class="vd-loader"></div>');
 $.get("/app/qbo_invoices", function (data) {
