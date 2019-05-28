@@ -18,6 +18,13 @@
                 })
             }
 
+            function invoiceCall() {
+                $("#result").html('Loading...')
+                $.get("/app/qbo_invoices", function (data) {
+                    $("#result").html(data)
+                })
+            }
+
             function revokeCall() {
                 $("#result").html('Loading...')
                 $.get("/app/revoke", function (data) {
@@ -52,6 +59,7 @@
             {% endif %}
             <button onclick="refreshCall()">Refresh Token Call</button>
             <button onclick="revokeCall()">Revoke Token Call</button>
+            <button onclick="invoiceCall()">Invoices API Call</button>
             
             <br><br>
             <div><code id="result"></code></div>

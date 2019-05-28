@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^refresh/?$', views.refresh, name='refresh'),
     url(r'^user_info/?$', views.user_info, name='user_info'),
     url(r'^migration/?$', views.migration, name='migration'),
+    url(r'^qbo_invoices/?$', views.send_invoice_to_qbo, name="qbo_invoices"),
 ]

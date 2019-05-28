@@ -13,7 +13,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServer
 from django.conf import settings
 from django.core import serializers
 
-from app.services import qbo_api_call
+from app.services import qbo_api_call, post_sale_invoice
 
 # Create your views here.
 def index(request):
@@ -122,6 +122,32 @@ def qbo_request(request):
         return HttpResponse(' '.join([response.content, str(response.status_code)]))
     else:
         return HttpResponse(response.content)
+
+
+def send_invoice_to_qbo(request):
+    auth_client = AuthClient(
+        settings.CLIENT_ID,
+        settings.CLIENT_SECRET,
+        settings.REDIRECT_URI,
+        settings.ENVIRONMENT,
+        access_token=request.session.get('access_token', None),
+        refresh_token=request.session.get('refresh_token', None),
+        realm_id=request.session.get('realm_id', None),
+    )
+
+    if auth_client.access_token is not None:
+        access_token = auth_client.access_token
+
+    if auth_client.realm_id is None:
+        raise ValueError('Realm id not specified.')
+    print(auth_client.access_token, auth_client.realm_id)
+    response = post_sale_invoice(auth_client.access_token, auth_client.realm_id)
+
+    if not response.ok:
+        return HttpResponse(' '.join([str(response.content), str(response.status_code)]))
+    else:
+        return HttpResponse(response.content)
+
 
 def user_info(request):
     auth_client = AuthClient(
