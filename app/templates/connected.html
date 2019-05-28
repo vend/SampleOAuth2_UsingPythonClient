@@ -44,6 +44,13 @@
                     $("#result").html(prettyPrintJson.toHtml(JSON.parse(data)))
                 })
             }
+
+            function exportVendCall() {
+                $("#result").html('Loading...')
+                $.get("/app/post_vend_sales", function (data) {
+                    $("#result").html(data)
+                })
+            }
         </script>
         <script src="//use.typekit.net/xdh7sbp.js" onload="try{Typekit.load();}catch(e){}" async></script>
         <script src="{% static "pretty-print-json.min.js" %}"></script>
@@ -88,7 +95,7 @@
                 </div>
             </div>
         </header>
-        
+
         <div id="main">
             <section style="padding: 60px 0">
                 <div class="container">
@@ -102,6 +109,7 @@
                     <div class="row vhq-pl-0 no-gutters">
                         <div class="col-12 col-md-3">
                             <button onclick="invoiceCall()"class="btn btn-primary btn-block">Invoices API Call</button>
+                            <button onclick="exportVendCall()"class="btn btn-primary btn-block">Post Vend Sales</button>
                         </div>
                     </div>
                 </div>
@@ -113,7 +121,7 @@
             </section>
             <section style="padding: 30px 0"></section>
         </div>
-        
+
         <div class="vhq-footer">
             <div class="vhq-footer-content">
                 <div class="vhq-footer-column">

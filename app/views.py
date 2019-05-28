@@ -155,6 +155,43 @@ def send_invoice_to_qbo(request):
     return HttpResponse(payment_response.content)
 
 
+def send_vend_sales(request):
+    auth_client = AuthClient(
+        settings.CLIENT_ID,
+        settings.CLIENT_SECRET,
+        settings.REDIRECT_URI,
+        settings.ENVIRONMENT,
+        access_token=request.session.get('access_token', None),
+        refresh_token=request.session.get('refresh_token', None),
+        realm_id=request.session.get('realm_id', None),
+    )
+
+    if auth_client.access_token is not None:
+        access_token = auth_client.access_token
+
+    if auth_client.realm_id is None:
+        raise ValueError('Realm id not specified.')
+
+    response = retrieve_vend_sales()
+    if not response.ok:
+        return HttpResponse(' '.join([str(response.content), str(response.status_code)]))
+
+    sales_body = json.loads(response.content)
+
+    response = post_sale_invoice(auth_client.access_token, auth_client.realm_id, sales=sales_body["register_sales"])
+    if not response.ok:
+        return HttpResponse(' '.join([str(response.content), str(response.status_code)]))
+
+    body = json.loads(response.content)
+    external_invoice_id = body["Invoice"]["Id"]
+
+    payment_response = post_invoice_payment(auth_client.access_token, auth_client.realm_id, external_invoice_id, sales=sales_body["register_sales"])
+    if not payment_response.ok:
+        return HttpResponse(' '.join([str(payment_response.content), str(payment_response.status_code)]))
+
+    return HttpResponse(payment_response.content)
+
+
 def user_info(request):
     auth_client = AuthClient(
         settings.CLIENT_ID, 

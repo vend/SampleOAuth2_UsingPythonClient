@@ -237,7 +237,9 @@ sale_json = """[
 product_to_account_code = {
     "product1-id": 1,
     "product2-id": 2,
-    "product3-id": 2
+    "product3-id": 2,
+    "0242ac12-0002-11e9-e945-7d27ba9c3903": 1,
+    "0242ac12-0002-11e9-e945-7d27bac8894e": 2
 }
 
 sales = json.loads(sale_json)
@@ -298,7 +300,7 @@ def generate_sale_invoice(sales):
         line_item["SalesItemLineDetail"]["ItemRef"]["value"] = account_code
 
         external_tax_code = "NON"
-        if tax_code == "02dcd191-ae2b-11e6-f485-a54b9896a941":
+        if tax_code == "02dcd191-ae2b-11e6-f485-a54b9896a941" or tax_code == "00000000-0002-0002-0002-000000000003":
             external_tax_code = "TAX"
 
         line_item["SalesItemLineDetail"]["TaxCodeRef"]["value"] = external_tax_code
@@ -342,7 +344,7 @@ def generate_sale_payment(sales, external_invoice_id):
     return payload
 
 
-def post_sale_invoice(access_token, realm_id):
+def post_sale_invoice(access_token, realm_id, sales=sales):
     """[summary]
 
     """
@@ -363,7 +365,7 @@ def post_sale_invoice(access_token, realm_id):
     return requests.post('{0}{1}'.format(base_url, route), json=payload, headers=headers)
 
 
-def post_invoice_payment(access_token, realm_id, external_invoice_id):
+def post_invoice_payment(access_token, realm_id, external_invoice_id, sales=sales):
     """[summary]
 
     """
@@ -383,3 +385,14 @@ def post_invoice_payment(access_token, realm_id, external_invoice_id):
     payload = generate_sale_payment(sales, external_invoice_id)
     print(payload)
     return requests.post('{0}{1}'.format(base_url, route), json=payload, headers=headers)
+
+
+def retrieve_vend_sales():
+    path = "https://weggieincl.dev.vendhq.works/api/register_sales"
+    auth_header = "Bearer {0}".format("67b8f8c2b5ea80e94a7baf519ad3b8db")
+    headers = {
+        'Authorization': auth_header,
+        'Accept': 'application/json'
+    }
+
+    return requests.get(path, headers=headers)
