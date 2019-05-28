@@ -303,9 +303,42 @@ def generate_sale_invoice(sales):
 
         line_item["SalesItemLineDetail"]["TaxCodeRef"]["value"] = external_tax_code
 
-
         payload["Line"].append(line_item)
 
+    return payload
+
+
+def generate_sale_payment(sales, external_invoice_id):
+    payload = {
+        "TotalAmt": 0,
+        "CustomerRef": {
+            "value": "1"
+        },
+        "Line": [
+            {
+                "Amount": 0,
+                "LinkedTxn": [
+                    {
+                        "TxnId": external_invoice_id,
+                        "TxnType": "Invoice"
+                    }
+                ]
+            }
+        ]
+    }
+
+    # assume only 1 type of payment
+    total_cash_payment = 0
+
+    # iterate over the sales to aggregate the line items by account code and tax code
+    for sale in sales:
+        for payment in sale["register_sale_payments"]:
+            amount = float(payment["amount"])
+            total_cash_payment += amount
+
+
+    payload["TotalAmt"] = total_cash_payment
+    payload["Line"][0]["Amount"] = total_cash_payment
     return payload
 
 
@@ -327,5 +360,26 @@ def post_sale_invoice(access_token, realm_id):
     }
 
     payload = generate_sale_invoice(sales)
+    return requests.post('{0}{1}'.format(base_url, route), json=payload, headers=headers)
+
+
+def post_invoice_payment(access_token, realm_id, external_invoice_id):
+    """[summary]
+
+    """
+
+    if settings.ENVIRONMENT == 'production':
+        base_url = settings.QBO_BASE_PROD
+    else:
+        base_url = settings.QBO_BASE_SANDBOX
+
+    route = '/v3/company/{0}/payment'.format(realm_id)
+    auth_header = 'Bearer {0}'.format(access_token)
+    headers = {
+        'Authorization': auth_header,
+        'Accept': 'application/json'
+    }
+
+    payload = generate_sale_payment(sales, external_invoice_id)
     print(payload)
     return requests.post('{0}{1}'.format(base_url, route), json=payload, headers=headers)
