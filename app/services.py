@@ -281,12 +281,17 @@ def generate_sale_invoice(sales):
         account_code = key[0]
         tax_code = key[1]
 
+        external_tax_code = "NON"
+        if tax_code == "02dcd191-ae2b-11e6-f485-a54b9896a941" or tax_code == "00000000-0002-0002-0002-000000000003":
+            external_tax_code = "TAX"
+
         # line_item = SalesItemLine()
         # line_item.Amount = value
         # line_item.Description = "Account code: {} and Tax code: {}".format(account_code, tax_code)
         line_item = {
             "DetailType": "SalesItemLineDetail",
             "Amount": value,
+            "Description": "Account code: {} and Tax code: {}".format(account_code, external_tax_code),
             "SalesItemLineDetail": {
                 "ItemRef": {
 
@@ -298,10 +303,6 @@ def generate_sale_invoice(sales):
         }
 
         line_item["SalesItemLineDetail"]["ItemRef"]["value"] = account_code
-
-        external_tax_code = "NON"
-        if tax_code == "02dcd191-ae2b-11e6-f485-a54b9896a941" or tax_code == "00000000-0002-0002-0002-000000000003":
-            external_tax_code = "TAX"
 
         line_item["SalesItemLineDetail"]["TaxCodeRef"]["value"] = external_tax_code
 
